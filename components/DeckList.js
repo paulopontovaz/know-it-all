@@ -1,22 +1,63 @@
 import React, { Component } from 'react'
-import { View, TouchableOpacity, Text, Platform, StyleSheet } from 'react-native'
+import { ScrollView, View, TouchableOpacity, Text, Platform, StyleSheet } from 'react-native'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Ionicons } from '@expo/vector-icons'
-import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
+import { AppLoading } from 'expo'
+import { connect } from 'react-redux'
+import ActionButton from 'react-native-action-button'
+import DeckItem from './DeckItem'
+import { fetchAllDecks } from '../actions'
 
 class DeckList extends Component {
+	state = { ready: false }
+
+	componentDidMount () {
+		this.props.getDecks().then(() => this.setState({ ready: true }))
+	}
 
 	render () {
+		const { ready } = this.state
+		const { decks } = this.props
+
+		if (!ready)
+			return (<AppLoading />)
+
 		return (
-			<View>
-				<Text>{"DeckList"}</Text>
+			<View style={{flex: 1}}>
+				{decks && <ScrollView style={{flex: 1}}>
+						{Object.keys(decks).map(deckKey => (
+							<DeckItem 
+								style={{backgroundColor: 'white'}}
+								deck={decks[deckKey]} 
+								key={deckKey} 
+								onSelect={() => this.props.navigation.navigate(
+									'DeckDetails', { deck: decks[deckKey] }
+								)}
+							/>
+						))}
+					</ScrollView>}
+
+				{!decks && 
+					<Text>{`There are no decks created. 
+							Why don't you create one by pressing the round button below?`}</Text>}
+
+				<ActionButton 
+					title="New Deck" 
+					degrees={0}
+					position="right"
+					onPress={() => this.props.navigation.navigate('AddDeck')}>
+						<MaterialCommunityIcons name="plus" />
+				</ActionButton>
 			</View>
 		)
 	}
 }
 
-// const styles = StyleSheet.create({
-// })
+const mapStateToProps = ({decks}) => ({decks})
 
-export default DeckList
-// export default connect()(DeckList)
+const mapDispatchToProps = dispatch => ({
+	getDecks: () => dispatch(fetchAllDecks())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(DeckList)
