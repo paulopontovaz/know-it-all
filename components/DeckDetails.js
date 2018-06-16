@@ -17,30 +17,17 @@ import CardItem from './CardItem'
 import { fetchCards } from '../actions'
 
 class DeckDetails extends Component {
-	state = {
-		ready: false,
-		showAnswers: false,
-		cards: [],
-	}
-
-	componentDidMount () {
-		const { deck } = this.props.navigation.state.params
-		this.props.getCards(deck.title)
-			.then(cards => this.setState({ ready: true }))
-	}
+	state = { showAnswers: false }
 
 	render () {
-		const { ready, showAnswers } = this.state
+		const { showAnswers } = this.state
 		const { cards } = this.props
-		const { deck } = this.props.navigation.state.params
-
-		if (!ready)
-			return (<AppLoading />)
+		const { deckTitle } = this.props.navigation.state.params
 
 		return (
 			<View style={{flex: 1}}>
 				<View>
-					<Text style={styles.deckTitle}>{deck.title}</Text>
+					<Text style={styles.deckTitle}>{deckTitle}</Text>
 					<TouchableOpacity>
 						<Text>{"START QUIZ!"}</Text>				
 					</TouchableOpacity>
@@ -52,17 +39,26 @@ class DeckDetails extends Component {
 					</View>					
 				</View>				
 
-				<ScrollView style={{flex: 1}}>
-					{cards && cards.map((card, index) => (
-						<CardItem key={index} card={card} deckTitle={deck.title} showAnswer={showAnswers} />
-					))}
-				</ScrollView>				
+				{cards && cards.length > 0 && (
+					<ScrollView style={{flex: 1}}>
+						{cards.map((card, index) => (
+							<CardItem key={index} card={card} deckTitle={deckTitle} showAnswer={showAnswers} />
+						))}
+					</ScrollView>
+				)}
+
+				{(!cards || cards.length === 0) && (
+					<View style={{flex: 1}}>
+						<Text>{`This deck, ${deckTitle}, has no questions.`}</Text>
+						<Text>{`Why don't you add one by pressing the round button below?`}</Text>
+					</View>
+				)}								
 
 				<ActionButton 
 					title="New Card" 
 					degrees={0}
 					position="right"
-					onPress={() => this.props.navigation.navigate('AddCard', { deckTitle: deck.title })}>
+					onPress={() => this.props.navigation.navigate('AddCard', { deckTitle: deckTitle })}>
 						<MaterialCommunityIcons name="plus" />
 				</ActionButton>
 			</View>
@@ -79,10 +75,11 @@ const styles = StyleSheet.create({
 	},
 })
 
-const mapStateToProps = ({cards}) => ({cards})
+const mapStateToProps = (decks, ownProps) => {
+	const { deckTitle } = ownProps.navigation.state.params
+	return {
+		cards: decks[deckTitle].questions
+	}
+}
 
-const mapDispatchToProps = dispatch => ({
-	getCards: deckTitle => dispatch(fetchCards(deckTitle))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(DeckDetails)
+export default connect(mapStateToProps)(DeckDetails)

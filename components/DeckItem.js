@@ -1,15 +1,17 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { removeDeck } from '../actions'
 
-export default function DeckItem ({deck, onSelect}) {
+function DeckItem ({deck, onSelect, deleteDeck}) {
 	return (
 		<View style={styles.container}>
 			<TouchableOpacity onPress={onSelect} style={styles.content}>
 				<Text style={styles.deckTitle}>{deck.title}</Text>
 				<Text style={styles.cardCount}>{'Card Count: ' + deck.questions.length}</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style={styles.content}>
+			<TouchableOpacity style={styles.content} onPress={() => deleteDeck(deck.title)}>
 				<MaterialCommunityIcons name="delete" size={25} />
 			</TouchableOpacity>
 		</View>
@@ -21,8 +23,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		flexDirection: 'row',
-		justifyContent: 'space-between',
-		padding: 10,
+		justifyContent: 'space-between',		
 		margin: 10,
 		backgroundColor: '#ffffff',
 		shadowColor: 'rgba(0, 0, 0, 0.24)',
@@ -34,7 +35,8 @@ const styles = StyleSheet.create({
 		shadowOpacity: 1,
 	},
 	content: {
-		height: '100%'
+		height: '100%',
+		padding: 10,
 	},
 	deckTitle: {
 		fontSize: 18,
@@ -45,3 +47,11 @@ const styles = StyleSheet.create({
 		color: '#cccccc',
 	},
 })
+
+function mapDispatchToProps (dispatch)  {
+	return {
+		deleteDeck: deckTitle => dispatch(removeDeck(deckTitle))
+	}
+}
+
+export default connect(null, mapDispatchToProps)(DeckItem)

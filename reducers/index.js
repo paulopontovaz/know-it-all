@@ -1,5 +1,4 @@
-import { GET_ALL_DECKS, ADD_DECK, DELETE_DECK, GET_CARDS, ADD_CARD, DELETE_CARD } from '../actions'
-import { combineReducers } from 'redux'
+import { GET_ALL_DECKS, ADD_DECK, DELETE_DECK, ADD_CARD, DELETE_CARD } from '../actions'
 
 function decks (state = {}, action) {
 	switch (action.type) {
@@ -8,27 +7,41 @@ function decks (state = {}, action) {
 		case ADD_DECK:
 			return {
 				...state,
-				[action.deck.title]: action.deck
+				[action.newDeck.title]: action.newDeck,
 			}
 		case DELETE_DECK:
-			return state.filter(deck => deck.title == action.deckTitle)
-		default:
-			return state
-	}
-}
-
-function cards (state = [], action) {
-	switch (action.type) {
-		case GET_CARDS:
-			return action.cards
+			debugger
+			let newState = Object.assign({}, state)
+			delete newState[deckTitle]
+			return newState
 		case ADD_CARD:
-			return [...state, action.card]
+			// state[action.deckTitle].questions = state[action.deckTitle].questions
+			// 	.concat(action.newCard)
+			// return state
+
+			return {
+				...state,
+				[action.deckTitle]: {
+					...state[action.deckTitle],
+					questions: [...state[action.deckTitle].questions, action.newCard],
+				}
+			}
+		case DELETE_CARD:
+			// state[action.deckTitle].questions = state[action.deckTitle].questions
+			// 	.filter(card => card.question === action.newCard.questions)
+			// return state
+
+			return {
+				...state,
+				[action.deckTitle]: {
+					...state[action.deckTitle],
+					questions: state[action.deckTitle].questions
+						.filter(card => card.question === action.newCard.questions),
+				}
+			} 
 		default:
 			return state
 	}
 }
 
-export default combineReducers({
-	decks,
-	cards
-})
+export default decks

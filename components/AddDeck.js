@@ -4,8 +4,9 @@ import {
 	TouchableOpacity, 
 	Text, 
 	// Platform, 
-	// StyleSheet,
-	TextInput
+	StyleSheet,
+	TextInput,
+	Button,
 } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
@@ -26,23 +27,21 @@ class AddDeck extends Component {
 		const { title } = this.state
 
 		return (
-			<View>
-				<TextInput
-					style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-					placeholder="Deck Title"
-					onChangeText={title => this.setState({title})}
-					value={title}
-				/>
+			<View style={{flex: 1, padding: 10}}>
+				<View>
+					<TextInput
+						style={{padding: 10}}
+						placeholder="Deck Title"
+						onChangeText={title => this.setState({title})}
+						value={title} />
+				</View>				
 				<TouchableOpacity onPress={() => this.insertDeck(title)}>
-					<Text>Add Deck</Text>
+					<Text>ADD DECK</Text>
 				</TouchableOpacity>
 			</View>
 		)
 	}
 }
-
-// const styles = StyleSheet.create({
-// })
 
 const mapDispatchToProps = dispatch => ({
 	addDeck: title => dispatch(insertDeck(title))

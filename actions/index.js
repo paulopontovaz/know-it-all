@@ -3,7 +3,6 @@ import * as API from '../util/api'
 export const GET_ALL_DECKS = 'GET_ALL_DECKS'
 export const ADD_DECK = 'ADD_DECK'
 export const DELETE_DECK = 'DELETE_DECK'
-export const GET_CARDS = 'GET_CARDS'
 export const ADD_CARD = 'ADD_CARD'
 export const DELETE_CARD = 'DELETE_CARD'
 
@@ -14,10 +13,10 @@ function getAllDecks (decks) {
 	}
 }
 
-function addDeck (deck)  {
+function addDeck (newDeck)  {
 	return {
 		type: ADD_DECK,
-		deck,
+		newDeck,
 	}
 }
 
@@ -28,21 +27,16 @@ function deleteDeck (deckTitle)  {
 	}
 }
 
-function getCards (cards) {
-	return {
-		type: GET_CARDS,
-		cards,
-	}
-}
-
-function addCard (card)  {
+function addCard (card, deckTitle)  {
 	return {
 		type: ADD_CARD,
-		card,
+		newCard,
+		deckTitle,
 	}
 }
 
 function deleteCard (card, deckTitle)  {
+	debugger
 	return {
 		type: ADD_DECK,
 		card,
@@ -69,23 +63,17 @@ export function insertDeck (newDeckTitle) {
 export function removeDeck (deckTitle) {
 	return dispatch =>
 	    API.removeDeck(deckTitle)
-			.then(newDeck => dispatch(deleteDeck(deckTitle)))
-}
-
-export function fetchCards (deckTitle) {
-	return dispatch =>
-	    API.getCards(deckTitle)
-			.then(cards => dispatch(getCards(cards)))
+			.then(() => dispatch(deleteDeck(deckTitle)))
 }
 
 export function insertCard (card, deckTitle) {
 	return dispatch =>
 	    API.addCard(card, deckTitle)
-			.then(newCard => dispatch(addCard(newCard)))
+			.then(newCard => dispatch(addCard(newCard, deckTitle)))
 }
 
 export function removeCard (card, deckTitle) {
 	return dispatch =>
 	    API.removeCard(card, deckTitle)
-			.then(newCard => dispatch(addCard(card, deckTitle)))
+			.then(() => dispatch(deleteCard(card, deckTitle)))
 }
