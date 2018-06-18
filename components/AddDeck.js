@@ -3,12 +3,12 @@ import {
 	View, 
 	TouchableOpacity, 
 	Text, 
-	// Platform, 
 	StyleSheet,
 	TextInput,
 	Button,
 } from 'react-native'
 import { NavigationActions } from 'react-navigation'
+import TextButton from './TextButton'
 import { connect } from 'react-redux'
 import { insertDeck } from '../actions'
 
@@ -34,10 +34,12 @@ class AddDeck extends Component {
 						placeholder="Deck Title"
 						onChangeText={title => this.setState({title})}
 						value={title} />
-				</View>				
-				<TouchableOpacity onPress={() => this.insertDeck(title)}>
-					<Text>ADD DECK</Text>
-				</TouchableOpacity>
+				</View>
+				<TextButton 
+					style={{marginTop: 10}}
+					onPress={() => this.insertDeck(title)}>
+						ADD DECK
+				</TextButton>
 			</View>
 		)
 	}

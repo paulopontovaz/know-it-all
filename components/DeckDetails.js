@@ -1,23 +1,31 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { _ } from 'lodash'
 import {
 	ScrollView,
 	View,
 	TouchableOpacity,
 	Text,
 	Switch,
-	// Platform,
 	StyleSheet,
 	TextInput
 } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import ActionButton from 'react-native-action-button'
-import { connect } from 'react-redux'
 import { AppLoading } from 'expo'
 import CardItem from './CardItem'
+import TextButton from './TextButton'
 import { fetchCards } from '../actions'
+import * as Colors from '../util/colors'
 
 class DeckDetails extends Component {
 	state = { showAnswers: false }
+
+	startQuiz() {
+		const { cards } = this.props
+		if(!_.isEmpty(cards))
+			this.props.navigation.navigate('Quiz', { cards })
+	}
 
 	render () {
 		const { showAnswers } = this.state
@@ -25,22 +33,26 @@ class DeckDetails extends Component {
 		const { deckTitle } = this.props.navigation.state.params
 
 		return (
-			<View style={{flex: 1}}>
+			<View style={styles.container}>
 				<View>
-					<Text style={styles.deckTitle}>{deckTitle}</Text>
-					<TouchableOpacity>
-						<Text>{"START QUIZ!"}</Text>				
-					</TouchableOpacity>
-					<View>
-						<Text>{'Show answers'}</Text>
+					<View style={styles.header}>
+						<Text style={styles.deckTitle}>{deckTitle}</Text>
+						<TextButton 
+							onPress={() => this.startQuiz()}
+							disabled={_.isEmpty(cards)}>
+								Start Quiz!
+						</TextButton>
+					</View>					
+					<View style={styles.showAnswers}>
+						<Text style={styles.showAnswersText}>Show answers</Text>
 						<Switch 
 							value={showAnswers} 
 							onValueChange={value => this.setState({showAnswers: value})} />
 					</View>					
-				</View>				
+				</View>
 
 				{cards && cards.length > 0 && (
-					<ScrollView style={{flex: 1}}>
+					<ScrollView style={styles.scrollViewContainer}>
 						{cards.map((card, index) => (
 							<CardItem key={index} card={card} deckTitle={deckTitle} showAnswer={showAnswers} />
 						))}
@@ -48,9 +60,11 @@ class DeckDetails extends Component {
 				)}
 
 				{(!cards || cards.length === 0) && (
-					<View style={{flex: 1}}>
-						<Text>{`This deck, ${deckTitle}, has no questions.`}</Text>
-						<Text>{`Why don't you add one by pressing the round button below?`}</Text>
+					<View style={styles.messageBox}>
+						<Text style={styles.messageTitle}>{`This deck has no questions.`}</Text>
+						<Text style={styles.messageText}>
+							{`Why don't you add one by pressing the round button below?`}
+						</Text>
 					</View>
 				)}								
 
@@ -58,6 +72,7 @@ class DeckDetails extends Component {
 					title="New Card" 
 					degrees={0}
 					position="right"
+					buttonColor={Colors.mainFont}
 					onPress={() => this.props.navigation.navigate('AddCard', { deckTitle: deckTitle })}>
 						<MaterialCommunityIcons name="plus" />
 				</ActionButton>
@@ -67,15 +82,57 @@ class DeckDetails extends Component {
 }
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1, 
+		padding: 10,
+		backgroundColor: Colors.mainBackground,
+	},
+	scrollViewContainer: {
+		flex: 1, 
+		marginTop: 20,
+	},
 	deckTitle: {
 		margin: 10,
-		color: 'black',
+		color: Colors.mainFont,
 		fontSize: 28,
 		fontWeight: 'bold',
 	},
+	header: {
+		flexDirection: 'row', 
+		justifyContent: 'space-between', 
+		alignItems: 'center',
+	},
+	showAnswers: {
+		flexDirection: 'row', 
+		justifyContent: 'flex-end', 
+		alignItems: 'center', 
+		marginTop: 30,
+	},
+	showAnswersText: {
+		marginRight: 5,
+		color: Colors.mainFont,
+	},
+	messageBox: {
+		flex: 1,
+		justifyContent: 'flex-start',
+		alignItems: 'center',
+		padding: 10,
+	},	
+	messageTitle: {
+		fontWeight: 'bold',
+		fontSize: 20,
+		marginTop: 20,
+		alignItems: 'center',
+		color: Colors.mainFont,
+	},
+	messageText: {
+		marginTop: 20,
+		alignItems: 'center',
+		color: Colors.mainFont,
+	},
 })
 
-const mapStateToProps = (decks, ownProps) => {
+const mapStateToProps = ({ decks }, ownProps) => {
 	const { deckTitle } = ownProps.navigation.state.params
 	return {
 		cards: decks[deckTitle].questions

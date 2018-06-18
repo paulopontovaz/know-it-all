@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
 	View,
 	TouchableOpacity,
 	Text,
-	// Platform,
-	// StyleSheet,
+	StyleSheet,
 	TextInput
 } from 'react-native'
 import { NavigationActions } from 'react-navigation'
-import { connect } from 'react-redux'
+import TextButton from './TextButton'
 import { insertCard } from '../actions'
 
 class AddCard extends Component {
@@ -20,38 +20,55 @@ class AddCard extends Component {
 	insertCard (card) {
 		const { deckTitle } = this.props.navigation.state.params
 
-		if (card && card.question && card.answer && deckTitle)
+		if (card && card.question && card.answer && deckTitle) {
 			this.props.addCard(card, deckTitle)
-				.then(() => this.props.navigation.goBack())
+			this.props.navigation.goBack()
+		}
 	}
 
 	render () {
+		const { deckTitle } = this.props.navigation.state.params
 		const { question, answer } = this.state
 
 		return (
-			<View>
+			<View style={styles.container}>
+				<Text style={styles.header}>{`Add a card to '${deckTitle}'`}</Text>
 				<TextInput
-					style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+					style={styles.textInput}
 					placeholder="Question"
 					onChangeText={question => this.setState({question})}
 					value={question}
 				/>
 				<TextInput
-					style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+					style={styles.textInput}
 					placeholder="Answer"
 					onChangeText={answer => this.setState({answer})}
 					value={answer}
 				/>
-				<TouchableOpacity onPress={() => this.insertCard({question, answer})}>
-					<Text>Add Card</Text>
-				</TouchableOpacity>
+				<TextButton 
+					style={{marginTop: 10}}
+					onPress={() => this.insertCard({question, answer})}>
+						ADD CARD
+				</TextButton>
 			</View>
 		)
 	}
 }
 
-// const styles = StyleSheet.create({
-// })
+const styles = StyleSheet.create({
+	container: {
+		flex: 1, 
+		padding: 10,
+	},
+	header: {
+		padding: 10,
+		alignItems: 'center',
+	},
+	textInput: {
+		marginTop: 10,
+		padding: 10,
+	},
+})
 
 const mapDispatchToProps = dispatch => ({
 	addCard: (card, deckTitle) => dispatch(insertCard(card, deckTitle))

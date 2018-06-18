@@ -5,6 +5,9 @@ export const ADD_DECK = 'ADD_DECK'
 export const DELETE_DECK = 'DELETE_DECK'
 export const ADD_CARD = 'ADD_CARD'
 export const DELETE_CARD = 'DELETE_CARD'
+export const GET_RESULTS = 'GET_RESULTS'
+export const ADD_RESULT = 'ADD_RESULT'
+export const CLEAR_ENTRIES = 'CLEAR_ResultS'
 
 function getAllDecks (decks) {
 	return {
@@ -22,12 +25,12 @@ function addDeck (newDeck)  {
 
 function deleteDeck (deckTitle)  {
 	return {
-		type: ADD_DECK,
+		type: DELETE_DECK,
 		deckTitle,
 	}
 }
 
-function addCard (card, deckTitle)  {
+function addCard (newCard, deckTitle)  {
 	return {
 		type: ADD_CARD,
 		newCard,
@@ -36,18 +39,33 @@ function addCard (card, deckTitle)  {
 }
 
 function deleteCard (card, deckTitle)  {
-	debugger
 	return {
-		type: ADD_DECK,
+		type: DELETE_CARD,
 		card,
 		deckTitle,
 	}
 }
 
-/*
-	TODO: Implement functions below using AsyncStorage
-	1) The 'title' property of a deck must be unique. Validate that before letting someone add a deck.
-*/
+function getResults (results)  {
+	return {
+		type: GET_RESULTS,
+		results,
+	}
+}
+
+function addResult (newResult)  {
+	return {
+		type: ADD_RESULT,
+		newResult,
+	}
+}
+
+function clearResults ()  {
+	return {
+		type: CLEAR_ENTRIES,
+	}
+}
+
 export function fetchAllDecks () {
 	return dispatch =>
 	    API.getDecks()
@@ -57,7 +75,7 @@ export function fetchAllDecks () {
 export function insertDeck (newDeckTitle) {
 	return dispatch =>
 	    API.addDeck(newDeckTitle)
-			.then(newDeck => dispatch(addDeck(newDeck)))
+			.then(newDeck => newDeck ? dispatch(addDeck(newDeck)) : null)
 }
 
 export function removeDeck (deckTitle) {
@@ -69,11 +87,29 @@ export function removeDeck (deckTitle) {
 export function insertCard (card, deckTitle) {
 	return dispatch =>
 	    API.addCard(card, deckTitle)
-			.then(newCard => dispatch(addCard(newCard, deckTitle)))
+			.then(newCard => newCard ? dispatch(addCard(newCard, deckTitle)) : null)
 }
 
 export function removeCard (card, deckTitle) {
 	return dispatch =>
 	    API.removeCard(card, deckTitle)
 			.then(() => dispatch(deleteCard(card, deckTitle)))
+}
+
+export function fetchResults () {
+	return dispatch =>
+	    API.getResults()
+			.then(results => dispatch(getResults(results)))
+}
+
+export function insertResult (newResult) {
+	return dispatch =>
+	    API.addResult(newResult)
+			.then(insertedResult => dispatch(addResult(insertedResult)))
+}
+
+export function removeAllResults () {
+	return dispatch =>
+	    API.clearResults()
+			.then(() => dispatch(clearResults()))
 }

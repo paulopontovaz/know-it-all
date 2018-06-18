@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { _ } from 'lodash'
-import { ScrollView, View, TouchableOpacity, Text, Platform, StyleSheet } from 'react-native'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { Ionicons } from '@expo/vector-icons'
+import { ScrollView, View, TouchableOpacity, Text, StyleSheet } from 'react-native'
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons'
 import { NavigationActions } from 'react-navigation'
 import { AppLoading } from 'expo'
 import ActionButton from 'react-native-action-button'
 import DeckItem from './DeckItem'
 import { fetchAllDecks } from '../actions'
+import * as Colors from '../util/colors'
 
 class DeckList extends Component {
 	state = { ready: false }
@@ -25,11 +25,15 @@ class DeckList extends Component {
 			return (<AppLoading />)
 
 		return (
-			<View style={{flex: 1}}>
+			<View style={styles.container}>
 				{_.isEmpty(decks) && (
-					<View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: '#000000'}}>
-						<Text>{`There are no decks created. `}</Text>
-						<Text>{`Why don't you create one by pressing the round button below?`}</Text>
+					<View style={styles.messageBox}>
+						<Text style={styles.messageTitle}>
+							{`There are no decks created. `}
+						</Text>
+						<Text style={styles.messageText}>
+							{`Why don't you create one by pressing the round button below?`}
+						</Text>
 					</View>
 				)}
 				
@@ -37,7 +41,6 @@ class DeckList extends Component {
 					<ScrollView style={{flex: 1}}>
 						{Object.keys(decks).map(deckKey => (
 							<DeckItem 
-								style={{backgroundColor: 'white'}}
 								deck={decks[deckKey]} 
 								key={deckKey} 
 								onSelect={() => this.props.navigation.navigate(
@@ -52,6 +55,7 @@ class DeckList extends Component {
 					title="New Deck" 
 					degrees={0}
 					position="right"
+					buttonColor={Colors.mainFont}
 					onPress={() => this.props.navigation.navigate('AddDeck')}>
 						<MaterialCommunityIcons name="plus" />
 				</ActionButton>
@@ -60,7 +64,30 @@ class DeckList extends Component {
 	}
 }
 
-const mapStateToProps = (decks) => ({decks})
+const styles = StyleSheet.create({
+	container: {
+		flex: 1, 
+		backgroundColor: Colors.mainBackground,
+	},
+	messageBox: {
+		flex: 1,
+		justifyContent: 'flex-start',
+		alignItems: 'center',
+		padding: 10,
+	},	
+	messageTitle: {
+		fontWeight: 'bold',
+		fontSize: 20,
+		marginTop: 20,
+		alignItems: 'center',
+	},
+	messageText: {
+		marginTop: 20,
+		alignItems: 'center',
+	},
+})
+
+const mapStateToProps = ({decks}) => ({decks})
 
 const mapDispatchToProps = dispatch => ({
 	getDecks: () => dispatch(fetchAllDecks())

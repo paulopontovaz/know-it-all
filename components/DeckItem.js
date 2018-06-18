@@ -1,8 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { removeDeck } from '../actions'
+import * as Colors from '../util/colors'
 
 function DeckItem ({deck, onSelect, deleteDeck}) {
 	return (
@@ -11,13 +12,26 @@ function DeckItem ({deck, onSelect, deleteDeck}) {
 				<Text style={styles.deckTitle}>{deck.title}</Text>
 				<Text style={styles.cardCount}>{'Card Count: ' + deck.questions.length}</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style={styles.content} onPress={() => deleteDeck(deck.title)}>
-				<MaterialCommunityIcons name="delete" size={25} />
+			<TouchableOpacity 
+				style={styles.content} 
+				onPress={() => confirmDelete(deck.title, deleteDeck)}>
+				<MaterialCommunityIcons name="delete" size={25} color={Colors.mainFont} />
 			</TouchableOpacity>
 		</View>
 	)
 }
 
+function confirmDelete (deckTitle, deleteFunction) {
+	Alert.alert(
+		'Confirm Delete',
+		'Are you sure you want to delete this deck?',
+		[
+			{text: 'Cancel'},
+			{text: 'Yes', onPress: () => deleteFunction(deckTitle)}
+		],
+		{cancelable: false}
+	)
+}
 
 const styles = StyleSheet.create({
 	container: {
@@ -25,7 +39,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',		
 		margin: 10,
-		backgroundColor: '#ffffff',
+		backgroundColor: Colors.listItemBackground,
 		shadowColor: 'rgba(0, 0, 0, 0.24)',
 		shadowOffset: {
 			width: 0,
@@ -41,10 +55,11 @@ const styles = StyleSheet.create({
 	deckTitle: {
 		fontSize: 18,
 		fontWeight: 'bold',
+		color: Colors.mainFont,
 	},
 	cardCount: {
 		fontSize: 15,
-		color: '#cccccc',
+		color: Colors.secondaryFont,
 	},
 })
 
