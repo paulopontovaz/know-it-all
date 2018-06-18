@@ -1,3 +1,4 @@
+//Definindo cores usadas em todo o projeto.
 export const rightAnswer = "#67A35D"
 export const wrongAnswer = "#DC5A4A"
 export const mainBackground = "#E8F0F7"

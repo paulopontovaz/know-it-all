@@ -20,6 +20,7 @@ import AddCard from './components/AddCard'
 import Quiz from './components/Quiz'
 import ScoreBoard from './components/ScoreBoard'
 
+//Barra de status personalizada para lidar com diferentes tamanhos de tela e diferentes SOs.
 function CustomStatusBar ({ backgroundColor, ...props }) {
   return (
     <View style={{ backgroundColor, height: Constants.statusBarHeight }}>
@@ -28,6 +29,10 @@ function CustomStatusBar ({ backgroundColor, ...props }) {
   )
 }
 
+/*
+  Criando o stack navigator, que lidará com as routes da parte principal do app.
+  Aqui ficam todas as views da aba Deck List.
+*/
 const Main = createStackNavigator({
   Home: {
     screen: DeckList,
@@ -61,6 +66,17 @@ const Main = createStackNavigator({
     },
 })
 
+/*
+  Criando as abas 'Deck List' e 'Score Board'.
+  > Deck List 
+    - Funcionalidade principal do aplicativo;
+    - Criação de decks, cards e jogar o Quiz;
+    - É possível excluir decks e cards.
+  > Score Board
+    - Exibição do histórico de resultados das partidas;
+    - É possível limpar o histórico;
+    - Cada item dessa lista é inserido quando um jogador conclui uma partida do Quiz.
+*/
 const tabItems = {
   DeckList: {
     screen: Main,
@@ -84,6 +100,7 @@ const tabItems = {
   },
 }
 
+//Definindo configurações do Tab Navigator.
 const tabsConfig = {
   navigationOptions: {
     header: null
@@ -104,12 +121,14 @@ const tabsConfig = {
   }
 }
 
+//Criando um tipo de Tab Navigator diferente para cada SO.
 const Tabs = Platform.OS === 'ios'? 
   createBottomTabNavigator(tabItems, tabsConfig) :
   createMaterialTopTabNavigator(tabItems, tabsConfig)
 
 export default class App extends React.Component {
   componentDidMount () {
+    //Criando a notificação no dispositivo do usuário.
     setLocalNotification()
   }
 
