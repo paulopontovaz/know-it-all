@@ -9,6 +9,8 @@ export const GET_RESULTS = 'GET_RESULTS'
 export const ADD_RESULT = 'ADD_RESULT'
 export const CLEAR_ENTRIES = 'CLEAR_ResultS'
 
+// ACTION CREATORS - START //
+
 function getAllDecks (decks) {
 	return {
 		type: GET_ALL_DECKS,
@@ -66,6 +68,13 @@ function clearResults ()  {
 	}
 }
 
+// ACTION CREATORS - END //
+
+/*
+		Graças ao react-thunk, podemos acessar o dispatch para acionar os action
+	creators. Cada função abaixo chama um action creator após o retorno de uma 
+	promise	vinda da API criada.
+*/
 export function fetchAllDecks () {
 	return dispatch =>
 	    API.getDecks()

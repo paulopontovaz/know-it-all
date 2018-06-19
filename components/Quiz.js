@@ -8,16 +8,25 @@ import TextButton from './TextButton'
 import * as Colors from '../util/colors'
 import { insertResult } from '../actions'
 
+/*
+	Componente para a página do Quiz, acionada a partir da página DeckDetails.
+*/
 class Quiz extends Component {
 	state = { 
-		playerName: '',
-		currentCard: 0,
-		ready: false,
-		score: 0,
-		showAnswer: false,
-		done: false,
+		playerName: '', //Inicializa o nome do jogador como string vazia
+		currentCard: 0, //Índice do card atual na lista de cards do deck
+		ready: false, //Indica se já se pode iniciar o Quiz, após o preenchimento do 'playerName'
+		score: 0, //Inicializa o 'score' (pontuação) com zero
+		showAnswer: false, //Sinaliza se a resposta da pergunta deve ser exibida
+		done: false, //Indica se todas as questões já foram respondidas
 	}
 
+	/*
+		O Quiz se inicia quando o nome do jogador foi preenchido e 
+		o jogador tocou no botão que aciona esta função. Aqui o state
+		é reiniciado, exceto pela propriedade 'playerName', para conveniência,
+		caso o jogador queira jogar novamente, sem precisar reescrever seu nome.
+	*/
 	iniciarQuiz (playerName) {
 		if (playerName)
 			this.setState({
@@ -29,19 +38,31 @@ class Quiz extends Component {
 			})
 	}
 
-	answerQuestion (rightAnswer, cards) {
+	/*
+		rightAnswer: indica se a resposta estava certa ou errada.
+	*/
+	answerQuestion (rightAnswer) {
+		const numberOfCards = this.props.navigation.state.params.cards.length
+
 		this.setState(({score, currentCard, playerName}) => {
-			const done = cards.length - 1 === this.state.currentCard
+			//Verifica se o card atual é o último
+			const done = numberOfCards - 1 === this.state.currentCard
+			/*
+				Se a resposta estava correta, então o jogador recebe um ponto, 
+				mas se errar a pontuação não diminui. Permanece a mesma.
+			*/
 			score = rightAnswer ? score + 1 : score
 
-			if (done) 
-				this.props.saveResult({playerName, score})
+			if (done){ //Se o card atual for o último, salva-se a pontuação para exibir na Score Board.
+				const { deckTitle } = this.props.navigation.state.params
+				this.props.saveResult({playerName, score, deckTitle})
+			}
 
 			return {
 				score,
 				done,
-				currentCard: currentCard + 1,
-				showAnswer: false,	
+				currentCard: currentCard + 1, //Muda para o índice do próximo card.
+				showAnswer: false, //Esconde a resposta antes de ir para o próximo card.
 			}
 		})		
 	}
@@ -117,7 +138,7 @@ class Quiz extends Component {
 						style={styles.textButton}
 						disabled={!showAnswer}
 						color={Colors.rightAnswer}
-						onPress={() => this.answerQuestion(true, cards)}>
+						onPress={() => this.answerQuestion(true)}>
 							Correct :D
 					</TextButton>
 
@@ -125,7 +146,7 @@ class Quiz extends Component {
 						style={[styles.textButton, {marginTop: 20}]}
 						disabled={!showAnswer}
 						color={Colors.wrongAnswer}
-						onPress={() => this.answerQuestion(false, cards)}>
+						onPress={() => this.answerQuestion(false)}>
 							Wrong :(
 					</TextButton>
 				</View>				
@@ -178,6 +199,7 @@ const styles = StyleSheet.create({
 
 function mapDispatchToProps (dispatch) {
 	return {
+		//Função para salvar os resultados dos Quizes no histórico.
 		saveResult: newResult => dispatch(insertResult(newResult))
 	}
 }

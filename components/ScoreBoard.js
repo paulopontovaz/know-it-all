@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { _ } from 'lodash'
+import sortBy from 'sort-by'
 import { ScrollView, View, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { AppLoading } from 'expo'
@@ -9,9 +10,12 @@ import * as Colors from '../util/colors'
 import TextButton from './TextButton'
 import ResultItem from './ResultItem'
 
+/*
+	Componente criado para exibir o histórico de resultados das partidas jogadas.
+*/
 class ScoreBoard extends Component {
 	state = {
-		ready: false,
+		ready: false, //Indica quando os itens já foram carregados pela API.
 	}
 
 	componentDidMount () {
@@ -20,6 +24,7 @@ class ScoreBoard extends Component {
 	}
 
 	confirmClear () {
+		//Se a lista não estiver vazia, acionar a confirmação de exclusão de todos os itens
 		if (!_.isEmpty(this.props.scoreBoard))
 			Alert.alert(
 				'Confirm Clear Entries',
@@ -92,11 +97,16 @@ const styles = StyleSheet.create({
 	},
 })
 
-const mapStateToProps = ({scoreBoard}) => ({scoreBoard})
+/*
+	Passa da store para as props do componente a lista de resultados.
+	Foi usado o 'sortBy' para que a lista fosse ordenada do item mais
+	recente para o menos recente.
+*/
+const mapStateToProps = ({scoreBoard}) => ({scoreBoard: scoreBoard.sort(sortBy('-dateTime'))})
 
 const mapDispatchToProps = dispatch => ({
-	getResults: () => dispatch(fetchResults()),
-	clearResults: () => dispatch(removeAllResults()),
+	getResults: () => dispatch(fetchResults()), // Retorna a lista de resultados
+	clearResults: () => dispatch(removeAllResults()), //Limpa todos os itens da lista de resultados
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScoreBoard)

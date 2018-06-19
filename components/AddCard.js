@@ -11,6 +11,7 @@ import { NavigationActions } from 'react-navigation'
 import TextButton from './TextButton'
 import { insertCard } from '../actions'
 
+//Componente criado para inserção de um card na lista de cards de um deck.
 class AddCard extends Component {
 	state = {
 		question: '',
@@ -22,6 +23,7 @@ class AddCard extends Component {
 
 		if (card && card.question && card.answer && deckTitle) {
 			this.props.addCard(card, deckTitle)
+			//Após adicionar o novo card, volta-se para a página anterior.
 			this.props.navigation.goBack()
 		}
 	}

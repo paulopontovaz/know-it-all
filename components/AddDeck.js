@@ -12,6 +12,7 @@ import TextButton from './TextButton'
 import { connect } from 'react-redux'
 import { insertDeck } from '../actions'
 
+//Componente criado para inserção de um deck na lista de decks.
 class AddDeck extends Component {
 	state = {
 		title: '',
@@ -20,6 +21,7 @@ class AddDeck extends Component {
 	insertDeck (title) {
 		if (title)
 			this.props.addDeck(title)
+				//Após adicionar o novo deck, volta-se para a página anterior.
 				.then(() => this.props.navigation.goBack())
 	}
 

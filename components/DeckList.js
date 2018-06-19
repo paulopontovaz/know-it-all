@@ -10,10 +10,15 @@ import DeckItem from './DeckItem'
 import { fetchAllDecks } from '../actions'
 import * as Colors from '../util/colors'
 
+
+/*
+	Componente para exibir o map de decks.
+*/
 class DeckList extends Component {
 	state = { ready: false }
 
 	componentDidMount () {
+		//Após obter todos os decks a partir da API, marca o state como 'ready'.
 		this.props.getDecks().then(() => this.setState({ ready: true }))
 	}
 
@@ -90,7 +95,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = ({decks}) => ({decks})
 
 const mapDispatchToProps = dispatch => ({
-	getDecks: () => dispatch(fetchAllDecks())
+	getDecks: () => dispatch(fetchAllDecks()) //Função para obter o objeto de decks.
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeckList)

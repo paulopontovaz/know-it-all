@@ -2,6 +2,7 @@ import React from 'react'
 import { Text, TouchableOpacity, Button, StyleSheet } from 'react-native'
 import * as Colors from '../util/colors'
 
+//Wrapper criado para uso de buttons, para ter o efeito de TouchableOpacity.
 export default function TextButton ({ 
 	children, 
 	onPress, 

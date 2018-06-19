@@ -18,13 +18,18 @@ import TextButton from './TextButton'
 import { fetchCards } from '../actions'
 import * as Colors from '../util/colors'
 
+/*
+	Componente que exibe dados do deck selecionado e sua lista de cards.
+	É a partir dessa página que se pode iniciar o Quiz.
+*/
 class DeckDetails extends Component {
 	state = { showAnswers: false }
 
 	startQuiz() {
 		const { cards } = this.props
-		if(!_.isEmpty(cards))
-			this.props.navigation.navigate('Quiz', { cards })
+		const { deckTitle } = this.props.navigation.state.params
+		if(!_.isEmpty(cards)) //Se há cards na lista, vai-se para a página do Quiz.
+			this.props.navigation.navigate('Quiz', { cards, deckTitle })
 	}
 
 	render () {
@@ -133,6 +138,10 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = ({ decks }, ownProps) => {
+	/*
+		Obtém-se o título do deck a partir das propriedades do
+		'navigation' e consegue-se acessar os cards do deck correto.
+	*/
 	const { deckTitle } = ownProps.navigation.state.params
 	return {
 		cards: decks[deckTitle].questions

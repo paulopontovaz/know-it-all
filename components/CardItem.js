@@ -5,6 +5,9 @@ import { EvilIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { removeCard } from '../actions'
 import * as Colors from '../util/colors'
 
+/*
+	Componente criado para representar um item da lista de cards.
+*/
 function CardItem ({card, deckTitle, showAnswer, deleteCard}) {
 	return (
 		<View style={styles.allContainer}>
@@ -26,6 +29,7 @@ function CardItem ({card, deckTitle, showAnswer, deleteCard}) {
 	)
 }
 
+//Exibe uma dialog de confirmação para a exclusão do card, usando o 'Alert'.
 function confirmDelete (card, deckTitle, deleteFunction) {
 	Alert.alert(
 		'Confirm Delete',

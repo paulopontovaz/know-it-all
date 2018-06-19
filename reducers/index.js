@@ -10,6 +10,10 @@ import {
 	CLEAR_ENTRIES,
 } from '../actions'
 
+/*
+	Reducer que contém todos os decks e seus cards. 
+	Este reducer é um objeto pois os decks estão sendo mapeados.
+*/
 function decks (state = {}, action) {
 	switch (action.type) {
 		case GET_ALL_DECKS:
@@ -24,10 +28,10 @@ function decks (state = {}, action) {
 			delete newState[action.deckTitle]
 			return newState
 		case ADD_CARD:
-			// state[action.deckTitle].questions = state[action.deckTitle].questions
-			// 	.concat(action.newCard)
-			// return state
-
+			/*
+					Para adicionar um card, deve-se reconstruir o state modificando 
+				apenas a lista de cards do deck passado como parâmetro.
+			*/
 			return {
 				...state,
 				[action.deckTitle]: {
@@ -36,10 +40,11 @@ function decks (state = {}, action) {
 				}
 			}
 		case DELETE_CARD:
-			// state[action.deckTitle].questions = state[action.deckTitle].questions
-			// 	.filter(card => card.question === action.newCard.questions)
-			// return state
-
+			/*
+					Assim como no ADD_CARD, deve-se reconstruir o state modificando 
+				apenas a lista de cards do deck passado como parâmetro. O card é 
+				removido por filtragem.
+			*/
 			return {
 				...state,
 				[action.deckTitle]: {
@@ -53,6 +58,7 @@ function decks (state = {}, action) {
 	}
 }
 
+//Reducer que contém a lista de resultados cadastrados
 function scoreBoard (state = [], action) {
 	switch (action.type) {
 		case GET_RESULTS:

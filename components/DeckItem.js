@@ -5,6 +5,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { removeDeck } from '../actions'
 import * as Colors from '../util/colors'
 
+/*
+	Componente criado para representar um item da lista de decks.
+*/
 function DeckItem ({deck, onSelect, deleteDeck}) {
 	return (
 		<View style={styles.container}>
@@ -21,6 +24,7 @@ function DeckItem ({deck, onSelect, deleteDeck}) {
 	)
 }
 
+//Exibe uma dialog de confirmação para a exclusão do deck, usando o 'Alert'.
 function confirmDelete (deckTitle, deleteFunction) {
 	Alert.alert(
 		'Confirm Delete',
