@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import * as moment from 'moment'
 import { View, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native'
 import { EvilIcons, MaterialCommunityIcons } from '@expo/vector-icons'
-import { removeCard } from '../actions'
 import * as Colors from '../util/colors'
 
 /*

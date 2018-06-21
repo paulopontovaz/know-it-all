@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { View, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { removeDeck } from '../actions'
+import { removeDeck } from '../actions/decks'
 import * as Colors from '../util/colors'
 
 /*

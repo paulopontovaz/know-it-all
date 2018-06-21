@@ -10,19 +10,19 @@ import {
 import { NavigationActions } from 'react-navigation'
 import TextButton from './TextButton'
 import { connect } from 'react-redux'
-import { insertDeck } from '../actions'
+import { insertDeck } from '../actions/decks'
 
 //Componente criado para inserção de um deck na lista de decks.
 class AddDeck extends Component {
 	state = {
 		title: '',
-	}
+	}	
 
 	insertDeck (title) {
-		if (title)
+		if (title.trim())
 			this.props.addDeck(title)
-				//Após adicionar o novo deck, volta-se para a página anterior.
-				.then(() => this.props.navigation.goBack())
+				//Após adicionar o novo deck, navega-se à página do deck criado.
+				.then(() => this.props.navigation.navigate('DeckDetails', { deckTitle: title }))
 	}
 
 	render () {

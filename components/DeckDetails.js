@@ -15,7 +15,7 @@ import ActionButton from 'react-native-action-button'
 import { AppLoading } from 'expo'
 import CardItem from './CardItem'
 import TextButton from './TextButton'
-import { fetchCards } from '../actions'
+import { fetchCards } from '../actions/cards'
 import * as Colors from '../util/colors'
 
 /*
@@ -47,13 +47,16 @@ class DeckDetails extends Component {
 							disabled={_.isEmpty(cards)}>
 								Start Quiz!
 						</TextButton>
-					</View>					
-					<View style={styles.showAnswers}>
-						<Text style={styles.showAnswersText}>Show answers</Text>
-						<Switch 
-							value={showAnswers} 
-							onValueChange={value => this.setState({showAnswers: value})} />
-					</View>					
+					</View>
+					<View style={styles.cardsHeader}>
+						<Text style={styles.cardsHeaderTitle}>Cards ({cards.length})</Text>
+						<View style={styles.showAnswers}>
+							<Text style={styles.showAnswersText}>Show answers</Text>
+							<Switch 
+								value={showAnswers} 
+								onValueChange={value => this.setState({showAnswers: value})} />
+						</View>	
+					</View>									
 				</View>
 
 				{cards && cards.length > 0 && (
@@ -66,7 +69,7 @@ class DeckDetails extends Component {
 
 				{(!cards || cards.length === 0) && (
 					<View style={styles.messageBox}>
-						<Text style={styles.messageTitle}>{`This deck has no questions.`}</Text>
+						<Text style={styles.messageTitle}>{`This deck has no cards.`}</Text>
 						<Text style={styles.messageText}>
 							{`Why don't you add one by pressing the round button below?`}
 						</Text>
@@ -107,11 +110,19 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between', 
 		alignItems: 'center',
 	},
+	cardsHeader: {		
+		marginTop: 30,
+		flexDirection: 'row', 
+		justifyContent: 'space-between', 
+		alignItems: 'center',
+	},
+	cardsHeaderTitle: {
+		fontSize: 18,
+	},
 	showAnswers: {
 		flexDirection: 'row', 
 		justifyContent: 'flex-end', 
 		alignItems: 'center', 
-		marginTop: 30,
 	},
 	showAnswersText: {
 		marginRight: 5,

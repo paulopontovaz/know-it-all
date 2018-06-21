@@ -7,7 +7,7 @@ import { NavigationActions } from 'react-navigation'
 import { AppLoading } from 'expo'
 import ActionButton from 'react-native-action-button'
 import DeckItem from './DeckItem'
-import { fetchAllDecks } from '../actions'
+import { fetchAllDecks } from '../actions/decks'
 import * as Colors from '../util/colors'
 
 

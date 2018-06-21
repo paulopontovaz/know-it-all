@@ -6,7 +6,8 @@ import { Ionicons } from '@expo/vector-icons'
 import { NavigationActions } from 'react-navigation'
 import TextButton from './TextButton'
 import * as Colors from '../util/colors'
-import { insertResult } from '../actions'
+import { insertResult } from '../actions/scoreBoard'
+import { scheduleNotification } from '../util/helpers'
 
 /*
 	Componente para a página do Quiz, acionada a partir da página DeckDetails.
@@ -56,6 +57,8 @@ class Quiz extends Component {
 			if (done){ //Se o card atual for o último, salva-se a pontuação para exibir na Score Board.
 				const { deckTitle } = this.props.navigation.state.params
 				this.props.saveResult({playerName, score, deckTitle})
+				//Reinicia a notificação para que seja disparada somente no dia seguinte.	
+				scheduleNotification()
 			}
 
 			return {

@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import TextButton from './TextButton'
-import { insertCard } from '../actions'
+import { insertCard } from '../actions/cards'
 
 //Componente criado para inserção de um card na lista de cards de um deck.
 class AddCard extends Component {
@@ -21,7 +21,7 @@ class AddCard extends Component {
 	insertCard (card) {
 		const { deckTitle } = this.props.navigation.state.params
 
-		if (card && card.question && card.answer && deckTitle) {
+		if (card && card.question.trim() && card.answer.trim() && deckTitle) {
 			this.props.addCard(card, deckTitle)
 			//Após adicionar o novo card, volta-se para a página anterior.
 			this.props.navigation.goBack()

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native'
 import { EvilIcons, MaterialCommunityIcons } from '@expo/vector-icons'
-import { removeCard } from '../actions'
+import { removeCard } from '../actions/cards'
 import * as Colors from '../util/colors'
 
 /*
